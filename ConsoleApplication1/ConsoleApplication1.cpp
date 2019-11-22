@@ -3,20 +3,37 @@
 
 #include "pch.h"
 #include <iostream>
-#include <dos.h>
+#include <conio.h>
+#include <Windows.h>
+#include <ctime>
 using namespace std;
 
 bool gameOver;
 const int width = 20;
 const int height = 20;
 int x, y, fruitX, fruitY, score;
+int tailX, tailY;
 bool snakeArr[width][height];
+
+enum direction
+{
+	STOP = 0,
+	LEFT,
+	RIGHT,
+	DOWN,
+	UP
+};
+direction snakeDir;
 
 void Setup()
 {
+	srand(time(NULL));
 	gameOver = false;
 	x = width / 2;
 	y = height / 2;
+
+	tailX = x;
+	tailY = y;
 
 	for (int i = 0; i < width; i++)
 	{
@@ -30,6 +47,7 @@ void Setup()
 	fruitX = rand() % width;
 	fruitY = rand() % height;
 	score = 0;
+	snakeDir = STOP;
 }
 
 void Draw()
@@ -50,6 +68,9 @@ void Draw()
 			{
 				cout << "@";
 			}
+			else if (i == fruitX && j == fruitY) {
+				cout << "F";
+			}
 			else
 			{
 				cout << " ";
@@ -64,15 +85,91 @@ void Draw()
 		cout << "#";
 	}
 	cout << endl;
+	cout << "\n\n Score = " << score << " x and y = " << x << " " << y;
+	cout << " Fruit x and y = " << fruitX << " " << fruitY;
 }
 
 void Input()
 {
+	if (_kbhit())
+	{
+		switch (_getch())
+		{
+			case 'w':
+				snakeDir = UP;
+				break;
 
+			case 's':
+				snakeDir = DOWN;
+				break;
+
+			case 'a':
+				snakeDir = LEFT;
+				break;
+
+			case 'd':
+				snakeDir = RIGHT;
+				break;
+
+			case 'p':
+				snakeDir = STOP;
+				break;
+
+			default:
+				break;
+		}
+	}
 }
 
 void Logic()
 {
+	if (x < 0 || y < 0 || x > width || y > width) 
+	{
+		snakeDir = STOP;
+		gameOver = true;
+		return;
+	}
+
+	switch (snakeDir)
+	{
+		case STOP:
+			break;
+
+		case LEFT:
+			y--;
+			break;
+
+		case RIGHT:
+			y++;
+			break;
+
+		case DOWN:
+			x++;
+			break;
+
+		case UP:
+			x--;
+			break;
+
+		default:
+			break;
+	}
+
+	if (fruitX == x + 1 && fruitY == y + 1)
+	{
+		fruitX = rand() % width;
+		fruitY = rand() % height;
+		score++;
+	}
+	//else 
+	{
+		snakeArr[tailX][tailY] = false;
+	}
+
+	tailX = x;
+	tailY = y;
+
+	snakeArr[x][y] = true;
 
 }
 
@@ -84,7 +181,7 @@ int main()
 		Draw();
 		Input();
 		Logic();
-		delay(10);
+		Sleep(10);
 	}
 }
 
