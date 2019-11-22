@@ -53,12 +53,25 @@ void Setup()
 	snakeDir = STOP;
 }
 
-bool CheckSnakeVector(int i, int j) 
+bool CheckSnakeVector(int i, int j)
 {
 	//for (int k = 0; k < snake.size; k++)
 	for (ptr = snake.begin(); ptr < snake.end(); ptr++)
 	{
-		if ((*ptr).first == i && (*ptr).second == j) 
+		if ((*ptr).first == i && (*ptr).second == j)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool CheckSnakeVectorExceptHead(int i, int j)
+{
+	//for (int k = 0; k < snake.size; k++)
+	for (ptr = snake.begin(); ptr + 1 < snake.end(); ptr++)
+	{
+		if ((*ptr).first == i && (*ptr).second == j)
 		{
 			return true;
 		}
@@ -103,8 +116,8 @@ void Draw()
 		cout << "#";
 	}
 	cout << endl;
-	cout << "\n\n Score = " << score << " x and y = " << x << " " << y;
-	cout << " Fruit x and y = " << fruitX << " " << fruitY;
+	cout << "\n\n Score = " << score;// << " x and y = " << x << " " << y;
+	//cout << " Fruit x and y = " << fruitX << " " << fruitY;
 }
 
 void Input()
@@ -191,6 +204,11 @@ void Logic()
 		fruitY = rand() % height + 1;
 		score++;
 		snake.push_back({ x, y });
+	}
+	else if (CheckSnakeVectorExceptHead(x, y))
+	{
+		gameOver = true;
+		return;
 	}
 	else 
 	{
