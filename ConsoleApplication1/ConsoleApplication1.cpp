@@ -6,6 +6,7 @@
 #include <conio.h>
 #include <Windows.h>
 #include <ctime>
+#include <stack>
 using namespace std;
 
 bool gameOver;
@@ -34,7 +35,7 @@ void Setup()
 
 	tailX = x;
 	tailY = y;
-
+	/*
 	for (int i = 0; i < width; i++)
 	{
 		for (int j = 0; j < height; j++)
@@ -43,9 +44,9 @@ void Setup()
 		}
 	}
 	snakeArr[x][y] = true;
-
-	fruitX = rand() % width;
-	fruitY = rand() % height;
+	*/
+	fruitX = rand() % width + 1;
+	fruitY = rand() % height + 1;
 	score = 0;
 	snakeDir = STOP;
 }
@@ -64,7 +65,8 @@ void Draw()
 		cout << "#";
 		for (int j = 1; j < height + 1; j++)
 		{
-			if (snakeArr[i - 1][j - 1])
+			//if (snakeArr[i - 1][j - 1])
+			if (x == i - 1 && y == j - 1)
 			{
 				cout << "@";
 			}
@@ -96,19 +98,31 @@ void Input()
 		switch (_getch())
 		{
 			case 'w':
-				snakeDir = UP;
+				if (snakeDir != DOWN)
+				{
+					snakeDir = UP;
+				}
 				break;
 
 			case 's':
-				snakeDir = DOWN;
+				if (snakeDir != UP)
+				{
+					snakeDir = DOWN;
+				}
 				break;
 
 			case 'a':
-				snakeDir = LEFT;
+				if (snakeDir != RIGHT)
+				{
+					snakeDir = LEFT;
+				}
 				break;
 
 			case 'd':
-				snakeDir = RIGHT;
+				if (snakeDir != LEFT)
+				{
+					snakeDir = RIGHT;
+				}
 				break;
 
 			case 'p':
@@ -132,44 +146,44 @@ void Logic()
 
 	switch (snakeDir)
 	{
-		case STOP:
-			break;
+	case STOP:
+		break;
 
-		case LEFT:
-			y--;
-			break;
+	case LEFT:
+		y--;
+		break;
 
-		case RIGHT:
-			y++;
-			break;
+	case RIGHT:
+		y++;
+		break;
 
-		case DOWN:
-			x++;
-			break;
+	case DOWN:
+		x++;
+		break;
 
-		case UP:
-			x--;
-			break;
+	case UP:
+		x--;
+		break;
 
-		default:
-			break;
+	default:
+		break;
 	}
 
 	if (fruitX == x + 1 && fruitY == y + 1)
 	{
-		fruitX = rand() % width;
-		fruitY = rand() % height;
+		fruitX = rand() % width + 1;
+		fruitY = rand() % height + 1;
 		score++;
 	}
 	//else 
 	{
-		snakeArr[tailX][tailY] = false;
+		//snakeArr[tailX][tailY] = false;
 	}
 
 	tailX = x;
 	tailY = y;
 
-	snakeArr[x][y] = true;
+	//snakeArr[x][y] = true;
 
 }
 
